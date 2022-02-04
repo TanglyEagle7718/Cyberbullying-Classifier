@@ -3,7 +3,6 @@ keras.__version__
 from keras.datasets import imdb
 import numpy as np
 import sklearn.model_selection as model_selection
-from keras.datasets import boston_housing
 from keras import models
 from keras import layers
 import numpy as np
@@ -14,11 +13,20 @@ fileName = 'new_cyberbullying_data.csv'
 print("fileName: ", fileName)
 raw_data = open(fileName, 'rt')
 #loadtxt defaults to floats
-data = np.loadtxt(raw_data, usecols = (0,1), skiprows = 1, delimiter=",")
+data = np.loadtxt(raw_data, usecols = (0,1), skiprows = 1, delimiter=",", dtype="str")
 x = data[:,0] #from 0 to 2
 y = data[:,1] #only column 3
 
-(train_data, train_labels), (test_data, test_labels) = model_selection.train_test_split(x, y, train_size=0.75,test_size=0.25, random_state=101)
+x_train, x_test, y_train, y_test = model_selection.train_test_split(x, y, train_size=0.75,test_size=0.25, random_state=101)
+
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+
+x_train = sc.fit_transform(x_train)
+
+x_test = sc.transform (x_test)
+
+(train_data, train_labels), (test_data, test_labels) = (x_train, y_train), (x_test, y_test)
 #[max(sequence) for sequence in train_data]
 print("train_data[0]:", train_data[0])
 print("shape: ", train_labels.shape)
